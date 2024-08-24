@@ -1,0 +1,374 @@
+#contact_modal {
+    display: none;
+}
+
+.photographer-header {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: 20px;
+    background-color: #FAFAFA;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    max-width: 1040px;
+    padding: 40px;
+}
+
+.photographer-header img {
+    order: 1;
+    width: 200px;
+    max-width: 100%;
+    height: 200px;
+    margin: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 100%;
+}
+
+.photographer-info {
+    text-align: left;
+}
+
+.photographer-info h1 {
+    margin: 0;
+    color: #D3573C;
+    font-size: 36px;
+}
+
+.photographer-info .city {
+    color: #901C1C;
+    font-size: 24px;
+}
+
+.photographer-info .tagline {
+    color: #525252;
+    font-size: 18px;
+}
+
+.contact_button {
+    order: 2;
+    justify-self: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    padding: 11px;
+    width: 170px;
+    height: 70px;
+    border: none;
+    background-color: #901C1C;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.photographer-info {
+    order: 1;
+}
+
+.section-filter {
+    display: flex;
+    margin: 0 auto;
+    margin-bottom: 30px;
+    max-width: 1040px;
+    width: 100%;
+    padding: 0 20px;
+    font-size: 18px;
+}
+
+.section-filter p {
+    font-weight: bold;
+}
+
+.filter #filter__icon i {
+    transform: rotate(0);
+}
+
+.filter.open #filter__icon i {
+    transform: rotate(180deg);
+}
+
+#filter__icon {
+    margin-left: 18px;
+}
+
+.filter {
+    display: flex;
+    flex-direction: column;
+    min-width: 170px;
+    margin-left: 25px;
+    padding: 0 15px;
+    background-color: #901C1C;
+    color: #fff;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+}
+
+#btn-filter--selected,
+#filters button {
+    all: unset;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#filters {
+    display: none;
+}
+
+.filter.open #filters {
+    display: block;
+}
+
+#filters button {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-top: 1px solid #fff;
+}
+
+#filters button.hide {
+    display: none;
+}
+
+#btn-filter--selected {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+/* Screen reader only (sr-only) */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.dropdown {
+    background: #901C1C;
+    color: #fff;
+    border-radius: 15px;
+}
+
+.dropdown ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-weight: bold;
+}
+
+.dropdown li {
+    position: relative;
+    padding: 15px;
+}
+
+.dropdown li:not(:last-of-type)::after {
+    position: absolute;
+    bottom: 0;
+    left: 15px;
+    right: 15px;
+    display: block;
+    width: calc(100% - (15px * 2));
+    height: 1px;
+    background: #fff;
+    content: "";
+}
+
+.dropdown i {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: #fff;
+    transition: transform .3s ease-in-out;
+}
+
+.dropdown i {
+    transform: rotate(180deg);
+}
+
+.dropdown button {
+    position: relative;
+    background: none;
+    border: 0;
+}
+
+.modal {
+    border-radius: 5px;
+    background-color: #DB8876;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 35px;
+    margin: auto;
+}
+
+.modal header {
+    justify-content: space-between;
+    width: 100%;
+}
+
+.modal header img {
+    cursor: pointer;
+}
+
+.modal header h2 {
+    font-size: 64px;
+    font-weight: normal;
+    text-align: center;
+}
+
+form {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+form label {
+    color: #312E2E;
+    font-size: 36px;
+}
+
+form div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: self-start;
+    margin-bottom: 26px;
+}
+
+form input {
+    width: 100%;
+    height: 68px;
+    border: none;
+    border-radius: 5px;
+}
+
+.gallery-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: 0 auto;
+    max-width: 1040px;
+    padding: 20px;
+    font-size: 22px;
+    color: #901C1C;
+}
+
+.gallery-section article {
+    overflow: hidden;
+}
+
+.gallery-section img,
+.gallery-section video {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
+
+.likes-counter {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 375px;
+    width: 100%;
+    margin: auto;
+    padding: 20px;
+    background: #DB8876;
+    font-size: 20x;
+    border-radius: 5px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    font-weight: bold;
+}
+
+.likes {
+    display: flex;
+    align-items: center;
+    margin-right: 40px;
+}
+
+.likes p {
+    margin: 0;
+}
+
+#totalLike {
+    margin-right: 10px;
+}
+
+.numberLikes {
+    display: flex;
+    align-items: center;
+}
+
+.btnLike {
+    padding-right: 0;
+}
+
+@media (min-width: 1240px) {
+    .header {
+        padding-left: 0;
+    }
+}
+
+@media (min-width: 768px) {
+    .photographer-info {
+        text-align: initial;
+    }
+
+    .photographer-info h1 {
+        font-size: 64px;
+    }
+
+    .gallery-section {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .likes-counter {
+        right: 40px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .photographer-header {
+        grid-template-columns: 1fr auto 1fr;
+        min-height: 300px;
+        margin: auto;
+        margin-bottom: 10px;
+    }
+
+    .photographer-header img {
+        order: 3;
+        margin-left: auto;
+        margin-right: 0;
+    }
+
+    .filter-section {
+        padding: 0;
+    }
+
+    .gallery-section {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+@media (min-width: 1080px) {
+    .section-filter {
+        padding: 0;
+    }
+
+    .gallery-section {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}

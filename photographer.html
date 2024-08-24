@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link href="https://fonts.googleapis.com/css?family=DM+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
+  <link href="css/style.css" rel="stylesheet" type="text/css" />
+
+  <title>Fisheye - photographe</title>
+</head>
+
+<body>
+  <header class="header">
+    <a href="index.html" title="accueil">
+      <img src="assets/images/logo.png" class="logo" alt="fisheye logo" />
+    </a>
+  </header>
+
+  <main id="main">
+    <div class="photographer-header">
+      <button class="contact_button" onclick="displayModal()">Contactez-moi</button>
+    </div>
+
+    <div class="section-filter">
+      <p>Trier par</p>
+<!--
+      <div class="dropdown" id="filterDropdown">
+        <button class="btn" aria-haspopup="listbox" aria-expanded="false" id="dropdownButton">
+          <span class="sr-only">Sélectionner une option</span> <i class="fas fa-chevron-down"></i>
+        </button>
+
+        <ul class="dropdown-menu" id="dropdownList" role="listbox">
+          <li role="option" aria-selected="true">Popularité</li>
+          <li role="option">Date</li>
+          <li role="option">Titre</li>
+        </ul>
+      </div>
+-->
+
+      <div>
+        <div class="filter">
+          <button aria-label="Filtrer la gallery" id="btn-filter--selected">
+            <span id="filter__selected"></span>
+            <span id="filter__icon">
+              <i class="fa-solid fa-chevron-down"></i>
+            </span>
+          </button>
+
+          <div id="filters" class="filters"></div>
+        </div>
+      </div>
+    </div>
+
+    <section class="gallery-section"></section>
+  </main>
+
+  <div id="contact_modal">
+    <div class="modal">
+      <header>
+        <h2>Contactez-moi</h2>
+        <img src="assets/icons/close.svg" onclick="closeModal()" />
+      </header>
+
+      <form>
+        <div>
+          <label>Prénom</label>
+          <input />
+        </div>
+        <button class="contact_button">Envoyer</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Models -->
+  <script src="scripts/models/Media.js"></script>
+
+  <!-- Templates -->
+  <script src="scripts/templates/Photographers.js"></script>
+  <script src="scripts/templates/PhotographerHeader.js"></script>
+  <script src="scripts/templates/ImgGalleryCard.js"></script>
+  <script src="scripts/templates/FilterGallery.js"></script>
+  <script src="scripts/templates/CounterLikes.js"></script>
+
+  <!-- API -->
+  <script src="scripts/api/PhotographerApi.js"></script>
+  <script src="scripts/api/MediaApi.js"></script>
+
+  <!-- Entry point -->
+  <script src="scripts/pages/photographer.js"></script>
+
+  <!-- Contact form  -->
+  <script src="scripts/utils/contactForm.js"></script>
+</body>
+
+</html>
