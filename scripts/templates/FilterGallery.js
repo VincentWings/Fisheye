@@ -41,6 +41,9 @@ const createFilterGallery = (parameters, callback) => {
             btnFilterSelected.value = param;
             valueFilterSelected.innerText = param;
 
+            // Close the filter dropdown by removing the 'open' class
+            filter.classList.remove("open");
+
             // Call the callback function with the selected filter
             callback(param); // This calls the function passed as 'callback'
         });
