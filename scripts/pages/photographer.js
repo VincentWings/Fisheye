@@ -53,7 +53,7 @@ async function main() {
     // Fetch photographer and media data
     const photographsData = await getPhotographApi(); // Get the list of photographers
     // Find the photographer in the list whose ID matches the one in the URL
-    const photographerInfos = photographsData.find(function(photographer) {
+    const photographerInfos = photographsData.find(function (photographer) {
       return photographer.id == photographerPageId;
     });
 
@@ -68,7 +68,7 @@ async function main() {
     // Fetch media data related to this photographer
     const mediasData = await getMediaApi(); // Get the list of media
     // Create an array of media items that belong to the photographer
-    const gallery = mediasData.filter(function(media) {
+    const gallery = mediasData.filter(function (media) {
       return media.photographerId == photographerPageId;
     });
 
@@ -89,6 +89,15 @@ async function main() {
     // Use the default filter to display the gallery initially
     filterGallery(filterList[0], gallery, name);
 
+    // Create the contact form
+    const author = photographerInfos.name;
+    const contactForm = new ContactForm(
+      author,
+      document.getElementById("modal-contact")
+    );
+
+    contactForm.createContactForm();
+    
   } catch (error) {
     console.error("Error in main function:", error); // If there's an error, log it in the console
   }

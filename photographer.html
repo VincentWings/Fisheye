@@ -21,24 +21,11 @@
 
   <main id="main">
     <div class="photographer-header">
-      <button class="contact_button" onclick="displayModal()">Contactez-moi</button>
+      <button class="contact-button" onclick="displayModal()">Contactez-moi</button>
     </div>
 
     <div class="section-filter">
       <p>Trier par</p>
-<!--
-      <div class="dropdown" id="filterDropdown">
-        <button class="btn" aria-haspopup="listbox" aria-expanded="false" id="dropdownButton">
-          <span class="sr-only">Sélectionner une option</span> <i class="fas fa-chevron-down"></i>
-        </button>
-
-        <ul class="dropdown-menu" id="dropdownList" role="listbox">
-          <li role="option" aria-selected="true">Popularité</li>
-          <li role="option">Date</li>
-          <li role="option">Titre</li>
-        </ul>
-      </div>
--->
 
       <div>
         <div class="filter">
@@ -57,19 +44,45 @@
     <section class="gallery-section"></section>
   </main>
 
-  <div id="contact_modal">
+  <div id="modal-contact">
     <div class="modal">
       <header>
-        <h2>Contactez-moi</h2>
+        <div id="modal-title">
+          <h2>Contactez-moi</h2>
+        </div>
+
         <img src="assets/icons/close.svg" onclick="closeModal()" />
       </header>
 
-      <form>
-        <div>
-          <label>Prénom</label>
-          <input />
+      <form action="#" method="post" class="contact-form" aria-label="Contact Form">
+        <!-- Prénom Field -->
+        <div class="form-group">
+          <label for="first-name" class="form-label">Prénom</label>
+          <input type="text" id="first-name" name="first_name" class="form-input" required aria-required="true">
         </div>
-        <button class="contact_button">Envoyer</button>
+
+        <!-- Nom Field -->
+        <div class="form-group">
+          <label for="last-name" class="form-label">Nom</label>
+          <input type="text" id="last-name" name="last_name" class="form-input" required aria-required="true">
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" id="email" name="email" class="form-input" required aria-required="true">
+        </div>
+
+        <!-- Votre Message Field -->
+        <div class="form-group">
+          <label for="message" class="form-label">Votre message</label>
+          <textarea id="message" name="message" class="form-input" rows="5" required aria-required="true"></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-group">
+          <button type="submit" class="contact-button">Envoyer</button>
+        </div>
       </form>
     </div>
   </div>
@@ -84,15 +97,15 @@
   <script src="scripts/templates/FilterGallery.js"></script>
   <script src="scripts/templates/CounterLikes.js"></script>
 
+  <!-- Utils -->
+  <script src="scripts/utils/ContactForm.js"></script>
+
   <!-- API -->
   <script src="scripts/api/PhotographerApi.js"></script>
   <script src="scripts/api/MediaApi.js"></script>
 
   <!-- Entry point -->
   <script src="scripts/pages/photographer.js"></script>
-
-  <!-- Contact form  -->
-  <script src="scripts/utils/contactForm.js"></script>
 </body>
 
 </html>
