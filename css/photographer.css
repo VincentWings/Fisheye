@@ -30,7 +30,7 @@
 
 #modal-title p {
     margin: 0;
-    font-size: 60px;
+    font-size: 56px;
 }
 
 .photographer-header {
@@ -93,7 +93,7 @@
 }
 
 .contact-button:hover {
-    background: #DB8876;
+    background-color: #DB8876;
     color: #000;
 }
 
@@ -265,7 +265,7 @@
 .modal header h2 {
     margin: 0;
     padding: 0;
-    font-size: 60px;
+    font-size: 56px;
     font-weight: normal;
     text-align: left;
 }
@@ -301,8 +301,22 @@ form .form-group:last-of-type {
 form input,
 form textarea {
     width: 100%;
+    padding: 20px;
+    font-size: 22px;
     border-radius: 5px;
-    border: none;
+    border: 2px solid #fff;
+    color: #525252;
+}
+
+form input:hover,
+form textarea:hover {
+    border: 2px solid #737373;
+}
+
+form input:focus,
+form textarea:focus {
+    border: 2px solid #901C1C;
+    outline: none;
 }
 
 form input {
@@ -318,8 +332,7 @@ form .contact-button {
 }
 
 form .contact-button:hover {
-    background: #901C1C;
-    color: #fff;
+    background-color: #dca093;
 }
 
 .gallery-section {
