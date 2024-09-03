@@ -50,52 +50,62 @@ const createFilterGallery = (parameters, callback) => {
     });
 };
 
-const filterGallery = function (value, list, data) {
+// This function filters and updates the gallery based on the selected filter value
+function filterGallery(filterValue, mediaList, photographerData) {
     const gallerySection = document.querySelector(".gallery-section");
 
-    const setupLightbox = function () {
-        const lightBoxBlock = document.getElementById("lightBoxBlock");
-        const nodeElements = [...document.getElementsByClassName("linkGallery")];
+    // Function to set up the lightbox feature for the gallery items
+    function setupLightbox() {
+        const modal = document.getElementById("modal");
+        const galleryItems = Array.from(document.getElementsByClassName("linkGallery"));
 
-        nodeElements.forEach((media, index) => {
-            media.addEventListener("click", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+        // Add click event listeners to each gallery item to open the lightbox
+        galleryItems.forEach((galleryItem, index) => {
+            galleryItem.addEventListener("click", (event) => {
+                event.preventDefault();
+                event.stopPropagation();
 
-                const lightbox = new LightBox(list, data, index);
-                lightBoxBlock.appendChild(lightbox.createLightBox());
+                // Show or hide the modal when an item is clicked
+                modal.classList.toggle("show");
+
+                // Create and display the lightbox with the clicked item
+                const lightbox = new LightBox(mediaList, photographerData, index);
+                modal.appendChild(lightbox.createLightBox());
+
+                // Set up navigation and closing features for the lightbox
                 lightbox.lightboxBrowser();
                 lightbox.lightBoxCloser();
             });
         });
-    };
-
-    const refreshGallery = function (sortedList) {
-        gallerySection.innerHTML = ""; // Clear existing gallery content
-
-        const totalLikes = sortedList.reduce((acc, media) => acc + media.likes, 0);
-
-        sortedList.map((media) => new Medias(media, data))
-            .forEach((media) => {
-                const template = new ImgGalleryBlock(media, media.photographerId, totalLikes);
-                gallerySection.appendChild(template.createImgGallery());
-            });
-
-        setupLightbox(); // Set up lightbox for the newly added gallery items
-    };
-
-    // Sorting and refreshing the gallery based on the selected filter value
-    switch (value) {
-        case "Popularité":
-            refreshGallery(sortByPopularity(list));
-            break;
-        case "Date":
-            refreshGallery(sortByDate(list));
-            break;
-        case "Titre":
-            refreshGallery(sortByTitle(list));
-            break;
-        default:
-            console.error("An error occurred: unknown filter value");
     }
-};
+
+    // Function to update the gallery with the sorted list of media items
+    function refreshGallery(sortedMediaList) {
+        // Clear the current gallery content
+        gallerySection.innerHTML = "";
+
+        // Calculate the total number of likes for the sorted media list
+        const totalLikes = sortedMediaList.reduce((total, mediaItem) => total + mediaItem.likes, 0);
+
+        // Create and add each media item to the gallery
+        sortedMediaList.forEach((mediaItem) => {
+            const mediaObject = new Medias(mediaItem, photographerData);
+            const galleryBlock = new ImgGalleryBlock(mediaObject, mediaItem.photographerId, totalLikes);
+            gallerySection.appendChild(galleryBlock.createImgGallery());
+        });
+
+        // Set up lightbox for the newly added gallery items
+        setupLightbox();
+    }
+
+    // Determine how to sort the media list based on the selected filter value
+    if (filterValue === "Popularité") {
+        refreshGallery(sortByPopularity(mediaList));
+    } else if (filterValue === "Date") {
+        refreshGallery(sortByDate(mediaList));
+    } else if (filterValue === "Titre") {
+        refreshGallery(sortByTitle(mediaList));
+    } else {
+        console.error("An error occurred: unknown filter value");
+    }
+}

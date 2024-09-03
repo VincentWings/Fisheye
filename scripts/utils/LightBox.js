@@ -1,185 +1,175 @@
 class LightBox {
-    constructor(array, author, index) {
-        this._array = array;
-        this._author = author;
-        this._index = index;
+    // Constructor method to initialize the LightBox with an array of media, author info, and the current index
+    constructor(mediaArray, authorData, currentIndex) {
+        this.mediaArray = mediaArray;
+        this.authorData = authorData;
+        this.currentIndex = currentIndex;
     }
-    createLightBox() {
-        let media = "";
 
-        if (this._array[this._index].image) {
-            media = `
-           <img 
-            id="LightBoxMedia" 
-            src="assets/photographers/medias/${
-          this._array[this._index].image
-        }" 
-            /> 
-        `;
-        } else if (this._array[this._index].video) {
-            media = `
-        
-          <video controls width="250" id="LightBoxMedia" >
-            <source src="assets/photographers/medias/${
-          this._array[this._index].video
-        }"
-              type="video/mp4">
-          </video>
-        `;
+    // Method to create the LightBox HTML structure and return it
+    createLightBox() {
+        let mediaContent = "";
+        let mediaTitle = this.mediaArray[this.currentIndex].title || ""; // Get the title of the current media
+
+        // Check if the current media is an image
+        if (this.mediaArray[this.currentIndex].image) {
+            mediaContent = `
+                <img 
+                    id="LightBoxMedia" 
+                    src="assets/photographers/medias/${this.mediaArray[this.currentIndex].image}" 
+                    alt="${mediaTitle}"
+                /> 
+            `;
+        }
+        // Check if the current media is a video
+        else if (this.mediaArray[this.currentIndex].video) {
+            mediaContent = `
+                <video aria-label="${mediaTitle}" controls width="250" id="LightBoxMedia">
+                    <source src="assets/photographers/medias/${this.mediaArray[this.currentIndex].video}" type="video/mp4">
+                </video>
+            `;
         }
 
-        const element = document.createElement("div");
-        console.log(media);
-        const domElement = `
-      
-      <div class= slideShowContainer id="lightBox">
-        
-        <div class="slideShow">
-          <button aria-label="Fermer la modal" id="close_modal">
-            <span ><i class="fa-solid fa-xmark"></i></span>
-          </button>
-        
-          <button id="left" aria-label="parcourir à gauche">
-            <span ><i class="fa-solid fa-chevron-left"></i></span>
-          </button>
-  
-            <div id="slideShow_modal">
-              
-              <div id="mediaContainer">
-               ${media}
-              </div>
-  
-              <div class="ImgInfos">
-                
-              </div>
-              
+        // Check if a modal-content already exists and remove it to avoid duplicates
+        const existingModalContent = document.querySelector(".modal-content");
+        if (existingModalContent) {
+            existingModalContent.remove();
+        }
+
+        // Create a new div element to hold the LightBox content
+        const lightBoxElement = document.createElement("div");
+        lightBoxElement.classList.add("modal-content");
+
+        // HTML structure for the LightBox, including navigation buttons, media content, and the title
+        const lightBoxHTML = `
+            <div class="slideShowContainer" id="lightBox">
+                <div class="slideShow">
+                    <button aria-label="Close dialog" id="close_modal">
+                        <span><i class="fa-solid fa-xmark"></i></span>
+                    </button>
+                    
+                    <button id="left" aria-label="Previous image">
+                        <span><i class="fa-solid fa-chevron-left"></i></span>
+                    </button>
+
+                    <div id="slideShow_modal">
+                        <div id="mediaContainer">
+                            <div class="Img">
+                                ${mediaContent}
+                            </div>
+                            
+                            <div class="ImgInfos">
+                                <p>${mediaTitle}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="right" aria-label="Next image">
+                        <span><i class="fa-solid fa-chevron-right"></i></span>
+                    </button>
+                </div>
             </div>
-          <button id="right" aria-label="parcourir à droite">
-            <span ><i class="fa-solid fa-chevron-right"></i></span>
-          </button>
-  
-        </div>
-      </div> 
-  
-      `;
+        `;
 
-        element.innerHTML = domElement;
+        // Insert the LightBox HTML into the created div element
+        lightBoxElement.innerHTML = lightBoxHTML;
 
-        element.querySelector("#right");
-
-        return element;
+        return lightBoxElement;
     }
 
-    ///////////////////////////////////////
-    // closer
+    // Method to close the LightBox when the close button is clicked
     lightBoxCloser() {
-        const close = document.getElementById("close_modal");
+        const closeButton = document.getElementById("close_modal");
 
-        close.addEventListener("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
+        closeButton.addEventListener("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            // Remove the "show" class from the #modal element
+            const modal = document.getElementById("modal");
+            if (modal) {
+                modal.classList.remove("show");
+            }
+
+            // Remove the LightBox from the DOM
             document.getElementById("lightBox").remove();
         });
     }
 
-    ///////////////////////////////////////
-    // change media
-    changeMedia(i) {
-        const media = this._array[i]
-        console.log(media)
+    // Method to change the media content (image/video) in the LightBox based on the current index
+    changeMedia(index) {
+        const media = this.mediaArray[index];
+        console.log(media); // Log the current media to the console
     }
 
-    ///////////////////////////////////////
-    // Browser
+    // Method to handle navigation (left/right) within the LightBox
     lightboxBrowser() {
-        const right = document.getElementById("right");
-        right.focus();
-        const left = document.getElementById("left");
+        const rightButton = document.getElementById("right");
+        const leftButton = document.getElementById("left");
 
+        rightButton.focus(); // Focus on the right button initially
 
-        right.addEventListener("click", (f) => {
-            f.preventDefault();
-            f.stopPropagation();
+        // Event listener for the right (next) button
+        rightButton.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
 
-            this._index += 1;
-            if (this._index >= this._array.length) {
-                this._index = 0;
+            this.currentIndex += 1; // Move to the next media
+            if (this.currentIndex >= this.mediaArray.length) {
+                this.currentIndex = 0; // Loop back to the first media if at the end
             }
-            console.log(this._index);
+            console.log(this.currentIndex);
 
-            document.getElementById("LightBoxMedia").remove();
-
-            const mediaContainer = document.getElementById("mediaContainer");
-            let media = "";
-
-            if (this._array[this._index].image) {
-                media = `
-           <img 
-            alt="Image de gallery"
-            id="LightBoxMedia" 
-            src="assets/photographers/medias/${
-            this._array[this._index].image
-          }" 
-            /> 
-        `;
-            } else if (this._array[this._index].video) {
-                media = `
-        
-          <video controls width="250" id="LightBoxMedia" alt="Vidéo de gallery">
-            <source src="assets/photographers/medias/${
-            this._array[this._index].video
-          }"
-              type="video/mp4">
-          </video>
-        `;
-            }
-            mediaContainer.innerHTML = media;
+            this.updateMediaContent(); // Update the media content in the LightBox
         });
 
-        left.addEventListener("click", (g) => {
-            g.preventDefault();
-            g.stopPropagation();
+        // Event listener for the left (previous) button
+        leftButton.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
 
-            this._index -= 1;
-            console.log(this._index);
-            if (this._index === -1) {
-                console.log("avant = au lenght " + this._index);
-                console.log(this._array);
-                this._index = this._array.length - 1;
-                console.log('après = au lenght ' + this._index);
-                console.log(this._array);
+            this.currentIndex -= 1; // Move to the previous media
+            if (this.currentIndex < 0) {
+                this.currentIndex = this.mediaArray.length - 1; // Loop back to the last media if at the beginning
             }
-            console.log(' après condition ' + this._index);
+            console.log(this.currentIndex);
 
-            document.getElementById("LightBoxMedia").remove();
-
-            const mediaContainer = document.getElementById("mediaContainer");
-            let media = "";
-
-            if (this._array[this._index].image) {
-                console.log(this._index);
-                media = `
-           <img 
-            id="LightBoxMedia" 
-            src="assets/photographers/medias/${
-            this._array[this._index].image
-          }" 
-            /> 
-        `;
-            } else if (this._array[this._index].video) {
-                console.log(this._index);
-                media = `
-        
-          <video controls width="250" id="LightBoxMedia" >
-            <source src="assets/photographers/medias/${
-            this._array[this._index].video
-          }"
-              type="video/mp4">
-          </video>
-        `;
-            }
-            mediaContainer.innerHTML = media;
-
+            this.updateMediaContent(); // Update the media content in the LightBox
         });
+    }
+
+    // Method to update the media content (image/video) in the LightBox based on the current index
+    updateMediaContent() {
+        document.getElementById("LightBoxMedia").remove(); // Remove the old media content
+
+        const mediaContainer = document.querySelector("#mediaContainer .Img");
+        const imgInfos = document.querySelector(".ImgInfos p");
+        let mediaContent = "";
+        let mediaTitle = this.mediaArray[this.currentIndex].title || ""; // Get the title of the current media
+
+        // Check if the current media is an image
+        if (this.mediaArray[this.currentIndex].image) {
+            mediaContent = `
+                <img 
+                    id="LightBoxMedia" 
+                    src="assets/photographers/medias/${this.mediaArray[this.currentIndex].image}" 
+                    alt="${mediaTitle}"
+                /> 
+            `;
+        }
+        // Check if the current media is a video
+        else if (this.mediaArray[this.currentIndex].video) {
+            mediaContent = `
+                <video aria-label="${mediaTitle}" controls width="250" id="LightBoxMedia">
+                    <source src="assets/photographers/medias/${this.mediaArray[this.currentIndex].video}" type="video/mp4">
+                </video>
+            `;
+        }
+
+        // Insert the new media content into the media container
+        mediaContainer.innerHTML = mediaContent;
+
+        // Update the title in the ImgInfos section
+        imgInfos.textContent = mediaTitle;
     }
 }

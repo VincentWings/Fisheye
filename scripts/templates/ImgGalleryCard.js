@@ -32,9 +32,15 @@ class ImgGalleryBlock {
 
     // Create the media element based on whether it's a video or image
     let mediaElement;
+
     if (this._ImgGallery.video) {
       mediaElement = document.createElement("video"); // Create video element
       mediaElement.controls = true; // Add video controls
+      
+      // Set aria-label for accessibility
+      const mediaTitle = this._ImgGallery.title || 'Video'; // Fallback to "Video" if title is undefined
+      mediaElement.setAttribute("aria-label", `${mediaTitle}`);
+    
       const sourceElement = document.createElement("source"); // Create source element for video
       sourceElement.src = this._ImgGallery.video; // Set video source
       sourceElement.type = "video/mp4"; // Set video type
@@ -46,13 +52,15 @@ class ImgGalleryBlock {
     } else {
       console.error('Media type not recognized:', this._ImgGallery); // Log error for unknown media type
     }
+    
 
     // Create a link element to wrap the media
     const linkElement = document.createElement("a");
     linkElement.classList.add("linkGallery");
     linkElement.href = "#"; // Link doesn't go anywhere
+    linkElement.setAttribute("aria-label", "image closeup view"); // Add aria-label for accessibility
     linkElement.appendChild(mediaElement); // Add media to the link
-
+    
     // Create a container for the title and like button
     const imgLikeContainer = document.createElement("div");
     imgLikeContainer.classList.add("imgLike");
