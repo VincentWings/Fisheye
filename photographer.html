@@ -12,13 +12,13 @@
 </head>
 
 <body>
-  <header class="header">
+  <header class="header" role="banner">
     <a href="index.html" title="accueil">
       <img src="assets/images/logo.png" class="logo" alt="Fisheye Homepage" />
     </a>
   </header>
 
-  <main id="main">
+  <main id="main" role="main">
     <div class="photographer-header">
       <button class="contact-button" onclick="displayModal()">Contactez-moi</button>
     </div>
@@ -43,8 +43,8 @@
     <section class="gallery-section"></section>
   </main>
 
-  <div id="modal-contact" aria-hidden="true">
-    <div class="modal">
+  <div id="modal-contact" aria-hidden="true" role="dialog" aria-labelledby="modal-title">
+    <div class="modal" role="document">
       <header>
         <div id="modal-title">
           <h2>Contactez-moi</h2>
