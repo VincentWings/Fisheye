@@ -1,11 +1,21 @@
 function displayModal() {
     const modal = document.getElementById("modal-contact");
     modal.classList.toggle("show");
+    modal.setAttribute('aria-hidden', modal.classList.contains('show') ? 'false' : 'true');
+    
+    if (modal.classList.contains('show')) {
+        // Set focus to the first input field when the modal is opened
+        const firstInput = document.querySelector('.contact-form input, .contact-form textarea');
+        if (firstInput) {
+            firstInput.focus();
+        }
+    }
 }
 
 function closeModal() {
     const modal = document.getElementById("modal-contact");
-    modal.classList.toggle("show");
+    modal.classList.remove("show");
+    modal.setAttribute('aria-hidden', 'true');
 }
 
 class ContactForm {
@@ -29,6 +39,7 @@ class ContactForm {
 function validateInput(event) {
     const input = event.target;
     const formDataElement = input.closest('.form-group');
+    const errorElement = formDataElement.querySelector('.error-message');
     let errorMessage = '';
 
     // Validate based on input ID
@@ -53,15 +64,20 @@ function validateInput(event) {
             break;
     }
 
-    // Set error message visibility based on validation result
     if (errorMessage) {
         formDataElement.classList.add('error');
-        formDataElement.setAttribute('data-error-visible', 'true');
-        formDataElement.setAttribute('data-error', errorMessage);
+        input.classList.add('error');
+        input.setAttribute('aria-invalid', 'true');
+        errorElement.textContent = errorMessage;
+        errorElement.classList.add('show');
+        errorElement.setAttribute('aria-hidden', 'false');
     } else {
         formDataElement.classList.remove('error');
-        formDataElement.setAttribute('data-error-visible', 'false');
-        formDataElement.removeAttribute('data-error');
+        input.classList.remove('error');
+        input.setAttribute('aria-invalid', 'false');
+        errorElement.textContent = '';
+        errorElement.classList.remove('show');
+        errorElement.setAttribute('aria-hidden', 'true');
     }
 }
 
@@ -69,6 +85,7 @@ function validateForm(event) {
     event.preventDefault(); // Prevent the form from submitting
 
     let isValid = true; // Track if the form is valid
+    let firstErrorField = null;
 
     const formInputs = document.querySelectorAll('.contact-form input, .contact-form textarea');
 
@@ -76,9 +93,11 @@ function validateForm(event) {
     formInputs.forEach(input => {
         validateInput({ target: input });
 
-        const formDataElement = input.closest('.form-group');
-        if (formDataElement.getAttribute('data-error-visible') === 'true') {
-            isValid = false;
+        if (input.getAttribute('aria-invalid') === 'true') {
+            isValid = false; // Form is not valid if any field is invalid
+            if (!firstErrorField) {
+                firstErrorField = input;
+            }
         }
     });
 
@@ -96,6 +115,8 @@ function validateForm(event) {
         const confirmationMessage = document.createElement('h2');
         confirmationMessage.textContent = 'Merci! Votre message a été envoyé avec succès.';
         modalTitle.appendChild(confirmationMessage);
+    } else if (firstErrorField) {
+        firstErrorField.focus(); // Focus on the first field with an error
     }
 }
 
@@ -122,3 +143,11 @@ formInputs.forEach(input => {
 
 // Add event listener to the form submit button
 form.addEventListener("submit", validateForm);
+
+// Prevent default form submission behavior on Enter key press within input fields
+form.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter' && event.target.tagName === 'INPUT') {
+        event.preventDefault(); // Prevent Enter key from submitting the form
+        validateForm(event); // Manually trigger form validation
+    }
+});

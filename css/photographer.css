@@ -345,19 +345,13 @@ input.error {
     border: 2px solid red;
 }
 
-.form-group[data-error]::after {
-    content: attr(data-error);
-    font-size: 10px;
-    color: #fff;
+.error-message {
+    font-size: 14px;
+    color: #000;
     display: block;
     margin-top: 10px;
     text-align: left;
-    opacity: 0;
     transition: 0.3s;
-}
-
-.form-group[data-error-visible="true"]::after {
-    opacity: 1;
 }
 
 .form-group[data-error-visible="true"] input,
@@ -483,6 +477,11 @@ input.error {
     top: 0;
     right: 0;
     font-size: 46px;
+}
+
+.btn-close {
+    background: none;
+    border: 0;
 }
 
 .slideShow {
