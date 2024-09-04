@@ -1,5 +1,6 @@
 #modal-contact {
     position: fixed;
+    z-index: 2;
     overflow: scroll;
     top: 0;
     left: 0;
@@ -30,7 +31,7 @@
 
 #modal-title p {
     margin: 0;
-    font-size: 56px;
+    font-size: 50px;
 }
 
 .photographer-header {
@@ -265,7 +266,7 @@
 .modal header h2 {
     margin: 0;
     padding: 0;
-    font-size: 56px;
+    font-size: 50px;
     font-weight: normal;
     text-align: left;
 }
@@ -283,7 +284,7 @@ form {
 
 form label {
     color: #312E2E;
-    font-size: 30px;
+    font-size: 26px;
 }
 
 form .form-group {
@@ -308,6 +309,11 @@ form textarea {
     color: #525252;
 }
 
+form input::placeholder,
+form textarea::placeholder {
+    color: #C4C4C4;
+}
+
 form input:hover,
 form textarea:hover {
     border: 2px solid #737373;
@@ -320,7 +326,7 @@ form textarea:focus {
 }
 
 form input {
-    height: 68px;
+    height: 60px;
 }
 
 form textarea {
@@ -333,6 +339,30 @@ form .contact-button {
 
 form .contact-button:hover {
     background-color: #dca093;
+}
+
+input.error {
+    border: 2px solid red;
+}
+
+.form-group[data-error]::after {
+    content: attr(data-error);
+    font-size: 10px;
+    color: #fff;
+    display: block;
+    margin-top: 10px;
+    text-align: left;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.form-group[data-error-visible="true"]::after {
+    opacity: 1;
+}
+
+.form-group[data-error-visible="true"] input,
+.form-group[data-error-visible="true"] textarea {
+    border: 2px solid #e54858;
 }
 
 .gallery-section {
@@ -539,7 +569,7 @@ form .contact-button:hover {
         grid-template-columns: 1fr 1fr 1fr;
     }
 
-    
+
     #mediaContainer {
         height: calc(100vh - 80px);
         padding-left: 50px;
