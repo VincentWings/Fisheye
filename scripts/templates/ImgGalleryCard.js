@@ -36,11 +36,11 @@ class ImgGalleryBlock {
     if (this._ImgGallery.video) {
       mediaElement = document.createElement("video"); // Create video element
       mediaElement.controls = true; // Add video controls
-      
+
       // Set aria-label for accessibility
       const mediaTitle = this._ImgGallery.title || 'Video'; // Fallback to "Video" if title is undefined
       mediaElement.setAttribute("aria-label", `${mediaTitle}`);
-    
+
       const sourceElement = document.createElement("source"); // Create source element for video
       sourceElement.src = this._ImgGallery.video; // Set video source
       sourceElement.type = "video/mp4"; // Set video type
@@ -52,7 +52,6 @@ class ImgGalleryBlock {
     } else {
       console.error('Media type not recognized:', this._ImgGallery); // Log error for unknown media type
     }
-    
 
     // Create a link element to wrap the media
     const linkElement = document.createElement("a");
@@ -60,7 +59,7 @@ class ImgGalleryBlock {
     linkElement.href = "#"; // Link doesn't go anywhere
     linkElement.setAttribute("aria-label", "image closeup view"); // Add aria-label for accessibility
     linkElement.appendChild(mediaElement); // Add media to the link
-    
+
     // Create a container for the title and like button
     const imgLikeContainer = document.createElement("div");
     imgLikeContainer.classList.add("imgLike");
@@ -79,7 +78,8 @@ class ImgGalleryBlock {
 
     const likeButton = document.createElement("button");
     likeButton.classList.add("btnLike");
-    likeButton.setAttribute("aria-label", "like or dislike"); // Accessibility label
+    likeButton.setAttribute("aria-label", "like this photo"); // Accessibility label
+    likeButton.setAttribute("aria-pressed", "false"); // Initially not liked (pressed state)
 
     const likeIcon = document.createElement("span");
     likeIcon.classList.add("likeIcon");
@@ -104,11 +104,15 @@ class ImgGalleryBlock {
         this._ImgGallery.likes += 1; // Increment likes
         likesCount.innerText = this._ImgGallery.likes; // Update displayed likes
         articleGallery.dataset.liked = "true"; // Mark as liked
+        likeButton.setAttribute("aria-pressed", "true"); // Update aria-pressed
+        likeButton.setAttribute("aria-label", "you liked this photo"); // Update aria-label
         likeIcon.querySelector("i").style.color = "#DB8876"; // Change color to indicate liked
       } else {
         this._ImgGallery.likes -= 1; // Decrement likes
         likesCount.innerText = this._ImgGallery.likes; // Update displayed likes
         articleGallery.dataset.liked = "false"; // Mark as unliked
+        likeButton.setAttribute("aria-pressed", "false"); // Update aria-pressed
+        likeButton.setAttribute("aria-label", "like this photo"); // Reset aria-label
         likeIcon.querySelector("i").style.color = "#901C1C"; // Change color to indicate unliked
       }
       this.counterLikeRefresh(); // Update total likes count

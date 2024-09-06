@@ -142,13 +142,15 @@
 
 #btn-filter--selected,
 #filters button {
-    all: unset;
     display: flex;
     justify-content: space-between;
     cursor: pointer;
     width: 100%;
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 700;
+    border: 0;
+    color: #fff;
+    background: none;
 }
 
 #filters {
@@ -280,6 +282,7 @@ form {
     width: 100%;
     flex-direction: column;
     align-items: flex-start;
+    font-family: "DM Sans";
 }
 
 form label {
@@ -307,6 +310,7 @@ form textarea {
     border-radius: 5px;
     border: 2px solid #fff;
     color: #525252;
+    font-family: "DM Sans";
 }
 
 form input::placeholder,
@@ -456,6 +460,12 @@ input.error {
     border: none;
     outline: none;
     cursor: pointer;
+}
+
+#close_modal:focus,
+#left:focus,
+#right:focus {
+    border: 1px solid black;
 }
 
 #left,

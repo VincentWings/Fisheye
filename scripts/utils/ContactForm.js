@@ -1,48 +1,92 @@
 function displayModal() {
     const modal = document.getElementById("modal-contact");
-    modal.classList.toggle("show");
-    modal.setAttribute('aria-hidden', modal.classList.contains('show') ? 'false' : 'true');
+    modal.classList.add("show");
+    modal.setAttribute('aria-hidden', 'false');
     
-    if (modal.classList.contains('show')) {
-        // Set focus to the first input field when the modal is opened
-        const firstInput = document.querySelector('.contact-form input, .contact-form textarea');
-        if (firstInput) {
-            firstInput.focus();
-        }
+    // Set focus to the first input field when the modal is opened
+    const firstInput = modal.querySelector('.contact-form input, .contact-form textarea');
+    if (firstInput) {
+        firstInput.focus();
     }
+
+    // Trap focus within the modal
+    trapFocus(modal);
+
+    // Add event listeners to the close button
+    setupCloseButton();
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const closeButton = document.querySelector('.btn-close');
+    
+    if (closeButton) {
+        // Add event listener for click to close the modal
+        closeButton.addEventListener('click', closeModal);
+    }
+});
 
 function closeModal() {
     const modal = document.getElementById("modal-contact");
     modal.classList.remove("show");
     modal.setAttribute('aria-hidden', 'true');
-}
 
-class ContactForm {
-    constructor(author, container) {
-        this._author = author;
-        this._container = container;
-    }
-
-    // Create the contact form
-    createContactForm() {
-        const modalTitle = document.querySelector("#modal-title");
-
-        // Create the subtitle element
-        const contactFormSubTitle = document.createElement("p");
-        contactFormSubTitle.textContent = this._author;
-        modalTitle.appendChild(contactFormSubTitle); // Append the subtitle to the title element
+    // Return focus to the trigger button
+    const triggerButton = document.querySelector('.contact-button');
+    if (triggerButton) {
+        triggerButton.focus();
     }
 }
 
-// Validation function to validate individual form inputs
+function trapFocus(modal) {
+    const focusableElements = modal.querySelectorAll('button, input, textarea, [tabindex="0"]');
+    const firstFocusableElement = focusableElements[0];
+    const lastFocusableElement = focusableElements[focusableElements.length - 1];
+
+    function handleKeyDown(e) {
+        const isTabPressed = (e.key === 'Tab' || e.keyCode === 9);
+
+        if (!isTabPressed) {
+            return;
+        }
+
+        if (e.shiftKey) { // Shift + Tab
+            if (document.activeElement === firstFocusableElement) {
+                e.preventDefault();
+                lastFocusableElement.focus();
+            }
+        } else { // Tab
+            if (document.activeElement === lastFocusableElement) {
+                e.preventDefault();
+                firstFocusableElement.focus();
+            }
+        }
+    }
+
+    modal.addEventListener('keydown', handleKeyDown);
+
+    // Remove event listener when modal is closed
+    modal.addEventListener('transitionend', () => {
+        if (modal.getAttribute('aria-hidden') === 'true') {
+            modal.removeEventListener('keydown', handleKeyDown);
+        }
+    }, { once: true });
+}
+
+function setupCloseButton() {
+    const closeButton = document.querySelector('.btn-close');
+    
+    if (closeButton) {
+        closeButton.addEventListener('click', closeModal);
+    }
+}
+
+// Validation function for input fields
 function validateInput(event) {
     const input = event.target;
     const formDataElement = input.closest('.form-group');
     const errorElement = formDataElement.querySelector('.error-message');
     let errorMessage = '';
 
-    // Validate based on input ID
     switch (input.id) {
         case 'first-name':
         case 'last-name':
@@ -71,6 +115,7 @@ function validateInput(event) {
         errorElement.textContent = errorMessage;
         errorElement.classList.add('show');
         errorElement.setAttribute('aria-hidden', 'false');
+        errorElement.setAttribute('aria-live', 'assertive');
     } else {
         formDataElement.classList.remove('error');
         input.classList.remove('error');
@@ -82,72 +127,86 @@ function validateInput(event) {
 }
 
 function validateForm(event) {
-    event.preventDefault(); // Prevent the form from submitting
+    event.preventDefault();
 
-    let isValid = true; // Track if the form is valid
+    let isValid = true;
     let firstErrorField = null;
 
     const formInputs = document.querySelectorAll('.contact-form input, .contact-form textarea');
 
-    // Validate each input field
     formInputs.forEach(input => {
         validateInput({ target: input });
 
         if (input.getAttribute('aria-invalid') === 'true') {
-            isValid = false; // Form is not valid if any field is invalid
+            isValid = false;
             if (!firstErrorField) {
                 firstErrorField = input;
             }
         }
     });
 
-    // If the form is valid, show a success message
     if (isValid) {
         // Remove the form from the modal
         const form = document.querySelector('.contact-form');
         form.remove();
 
-        // Remove the existing title and subtitle
         const modalTitle = document.querySelector('#modal-title');
-        modalTitle.innerHTML = ''; // Clear all content inside the #modal-title
+        modalTitle.innerHTML = '';
 
-        // Create and insert the confirmation message
         const confirmationMessage = document.createElement('h2');
         confirmationMessage.textContent = 'Merci! Votre message a été envoyé avec succès.';
         modalTitle.appendChild(confirmationMessage);
+
+        const closeButton = document.querySelector('.btn-close');
+        if (closeButton) {
+            closeButton.focus();
+        }
     } else if (firstErrorField) {
-        firstErrorField.focus(); // Focus on the first field with an error
+        firstErrorField.focus();
     }
 }
 
-// Simple function to check if the text is valid
 function isValidText(text) {
     const textRegex = /^[a-zA-ZÀ-ÿ\- ]+$/;
     return textRegex.test(text) && text.trim().length >= 2;
 }
 
-// Simple function to check if the email is valid
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
 
-// Attach event listeners to form inputs for immediate validation feedback
 const form = document.querySelector(".contact-form");
 const formInputs = document.querySelectorAll('.contact-form input, .contact-form textarea');
 
 formInputs.forEach(input => {
-    input.addEventListener('input', validateInput); // Trigger validation on input change
-    input.addEventListener('blur', validateInput); // Trigger validation when input loses focus
+    input.addEventListener('input', validateInput);
+    input.addEventListener('blur', validateInput);
 });
 
-// Add event listener to the form submit button
 form.addEventListener("submit", validateForm);
 
-// Prevent default form submission behavior on Enter key press within input fields
+// Handle Enter keypress to validate the form
 form.addEventListener('keydown', function(event) {
     if (event.key === 'Enter' && event.target.tagName === 'INPUT') {
-        event.preventDefault(); // Prevent Enter key from submitting the form
-        validateForm(event); // Manually trigger form validation
+        event.preventDefault();
+        validateForm(event);
     }
 });
+
+// ContactForm class to create the subtitle
+class ContactForm {
+    constructor(author, container) {
+        this._author = author;
+        this._container = container;
+    }
+
+    createContactForm() {
+        const modalTitle = document.querySelector("#modal-title");
+
+        // Create the subtitle element
+        const contactFormSubTitle = document.createElement("p");
+        contactFormSubTitle.textContent = this._author;
+        modalTitle.appendChild(contactFormSubTitle); // Append the subtitle to the title element
+    }
+}

@@ -28,14 +28,20 @@
 
       <div>
         <div class="filter">
-          <button aria-label="Filtrer la gallery" id="btn-filter--selected">
+          <button 
+            aria-label="Filtrer la galerie" 
+            id="btn-filter--selected" 
+            aria-expanded="false" 
+            aria-haspopup="listbox" 
+            aria-controls="filters"
+          >
             <span id="filter__selected"></span>
-            <span id="filter__icon">
+            <span id="filter__icon" aria-hidden="true">
               <i class="fa-solid fa-chevron-down"></i>
             </span>
           </button>
-
-          <div id="filters" class="filters"></div>
+        
+          <div id="filters" class="filters" role="listbox"></div>
         </div>
       </div>
     </div>
@@ -50,7 +56,7 @@
           <h2>Contactez-moi</h2>
         </div>
 
-        <button class="btn-close" onclick="closeModal()" aria-label="Fermer le modal">
+        <button class="btn-close" aria-label="Fermer le modal">
           <img src="assets/icons/close.svg" alt="Close" />
         </button>
       </header>

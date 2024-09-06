@@ -5,9 +5,20 @@ const createFilterGallery = (parameters, callback) => {
     const valueFilterSelected = document.querySelector('#filter__selected');
     const btnFilterSelected = document.querySelector("#btn-filter--selected");
 
+    // Initialize ARIA attributes for accessibility
+    btnFilterSelected.setAttribute("role", "button"); // Set role to button
+    btnFilterSelected.setAttribute("aria-haspopup", "listbox"); // Indicates that the button opens a listbox
+    btnFilterSelected.setAttribute("aria-expanded", "false"); // Indicates that the listbox is initially closed
+    btnFilterSelected.setAttribute("aria-controls", "filters"); // The ID of the listbox that the button controls
+
+    filters.setAttribute("role", "listbox"); // Set role for the filters container
+    filters.setAttribute("aria-labelledby", "btn-filter--selected"); // Points to the label of the listbox
+
     // Toggle the filter visibility when the button is clicked
     btnFilterSelected.addEventListener("click", () => {
+        const isExpanded = btnFilterSelected.getAttribute("aria-expanded") === "true";
         filter.classList.toggle("open"); // Toggle the 'open' class on the filter element
+        btnFilterSelected.setAttribute("aria-expanded", !isExpanded); // Update ARIA attribute
     });
 
     // Set the initial filter to the first parameter
@@ -20,6 +31,8 @@ const createFilterGallery = (parameters, callback) => {
         const btnFilter = document.createElement("button"); // Create a new button element
         btnFilter.value = param; // Set the button's value to the filter parameter
         btnFilter.innerText = param; // Set the button's text to the filter parameter
+        btnFilter.setAttribute('role', 'option'); // ARIA role for listbox options
+        btnFilter.setAttribute('aria-selected', index === 0 ? 'true' : 'false'); // Initial selection
 
         // Hide the first filter button by default
         if (index === 0) btnFilter.classList.add("hide");
@@ -32,10 +45,12 @@ const createFilterGallery = (parameters, callback) => {
             // Show all filter buttons
             document.querySelectorAll("#filters > button").forEach(button => {
                 button.classList.remove("hide");
+                button.setAttribute('aria-selected', 'false');
             });
 
             // Hide the button that was clicked
             e.target.classList.add("hide");
+            e.target.setAttribute('aria-selected', 'true');
 
             // Update the selected filter value and display text
             btnFilterSelected.value = param;
@@ -43,14 +58,46 @@ const createFilterGallery = (parameters, callback) => {
 
             // Close the filter dropdown by removing the 'open' class
             filter.classList.remove("open");
+            btnFilterSelected.setAttribute('aria-expanded', 'false'); // Update ARIA attribute
 
             // Call the callback function with the selected filter
             callback(param); // This calls the function passed as 'callback'
         });
     });
+
+    // Handle keyboard navigation within the listbox
+    filters.addEventListener('keydown', function (event) {
+        const focusableElements = Array.from(filters.querySelectorAll('button'));
+        const index = focusableElements.indexOf(document.activeElement);
+
+        switch (event.key) {
+            case 'ArrowDown':
+                event.preventDefault();
+                if (index < focusableElements.length - 1) {
+                    focusableElements[index + 1].focus();
+                } else {
+                    focusableElements[0].focus();
+                }
+                break;
+            case 'ArrowUp':
+                event.preventDefault();
+                if (index > 0) {
+                    focusableElements[index - 1].focus();
+                } else {
+                    focusableElements[focusableElements.length - 1].focus();
+                }
+                break;
+            case 'Enter':
+                event.preventDefault();
+                if (document.activeElement.tagName === 'BUTTON') {
+                    document.activeElement.click();
+                }
+                break;
+        }
+    });
 };
 
-// This function filters and updates the gallery based on the selected filter value
+// Function to filter and update the gallery based on the selected filter value
 function filterGallery(filterValue, mediaList, photographerData) {
     const gallerySection = document.querySelector(".gallery-section");
 
