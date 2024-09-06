@@ -3,16 +3,12 @@ function displayModal() {
     modal.classList.add("show");
     modal.setAttribute('aria-hidden', 'false');
     
-    // Set focus to the first input field when the modal is opened
     const firstInput = modal.querySelector('.contact-form input, .contact-form textarea');
     if (firstInput) {
         firstInput.focus();
     }
 
-    // Trap focus within the modal
     trapFocus(modal);
-
-    // Add event listeners to the close button
     setupCloseButton();
 }
 
@@ -20,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeButton = document.querySelector('.btn-close');
     
     if (closeButton) {
-        // Add event listener for click to close the modal
         closeButton.addEventListener('click', closeModal);
     }
 });
@@ -30,7 +25,6 @@ function closeModal() {
     modal.classList.remove("show");
     modal.setAttribute('aria-hidden', 'true');
 
-    // Return focus to the trigger button
     const triggerButton = document.querySelector('.contact-button');
     if (triggerButton) {
         triggerButton.focus();
@@ -45,16 +39,14 @@ function trapFocus(modal) {
     function handleKeyDown(e) {
         const isTabPressed = (e.key === 'Tab' || e.keyCode === 9);
 
-        if (!isTabPressed) {
-            return;
-        }
+        if (!isTabPressed) return;
 
-        if (e.shiftKey) { // Shift + Tab
+        if (e.shiftKey) {
             if (document.activeElement === firstFocusableElement) {
                 e.preventDefault();
                 lastFocusableElement.focus();
             }
-        } else { // Tab
+        } else {
             if (document.activeElement === lastFocusableElement) {
                 e.preventDefault();
                 firstFocusableElement.focus();
@@ -64,7 +56,6 @@ function trapFocus(modal) {
 
     modal.addEventListener('keydown', handleKeyDown);
 
-    // Remove event listener when modal is closed
     modal.addEventListener('transitionend', () => {
         if (modal.getAttribute('aria-hidden') === 'true') {
             modal.removeEventListener('keydown', handleKeyDown);
@@ -80,7 +71,6 @@ function setupCloseButton() {
     }
 }
 
-// Validation function for input fields
 function validateInput(event) {
     const input = event.target;
     const formDataElement = input.closest('.form-group');
@@ -133,6 +123,7 @@ function validateForm(event) {
     let firstErrorField = null;
 
     const formInputs = document.querySelectorAll('.contact-form input, .contact-form textarea');
+    const formData = {};
 
     formInputs.forEach(input => {
         validateInput({ target: input });
@@ -143,10 +134,18 @@ function validateForm(event) {
                 firstErrorField = input;
             }
         }
+
+        // Gather the form data for logging
+        formData[input.id] = input.value.trim();
+    });
+
+    // Log the form data in a clean way
+    console.log("Form Data Submitted:");
+    Object.keys(formData).forEach(key => {
+        console.log(`${key}: ${formData[key]}`);
     });
 
     if (isValid) {
-        // Remove the form from the modal
         const form = document.querySelector('.contact-form');
         form.remove();
 
@@ -186,7 +185,6 @@ formInputs.forEach(input => {
 
 form.addEventListener("submit", validateForm);
 
-// Handle Enter keypress to validate the form
 form.addEventListener('keydown', function(event) {
     if (event.key === 'Enter' && event.target.tagName === 'INPUT') {
         event.preventDefault();
@@ -194,7 +192,6 @@ form.addEventListener('keydown', function(event) {
     }
 });
 
-// ContactForm class to create the subtitle
 class ContactForm {
     constructor(author, container) {
         this._author = author;
@@ -204,9 +201,8 @@ class ContactForm {
     createContactForm() {
         const modalTitle = document.querySelector("#modal-title");
 
-        // Create the subtitle element
         const contactFormSubTitle = document.createElement("p");
         contactFormSubTitle.textContent = this._author;
-        modalTitle.appendChild(contactFormSubTitle); // Append the subtitle to the title element
+        modalTitle.appendChild(contactFormSubTitle);
     }
 }

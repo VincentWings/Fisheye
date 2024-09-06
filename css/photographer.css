@@ -116,11 +116,11 @@
     font-weight: bold;
 }
 
-.filter #filter__icon i {
+.filter #filter__icon {
     transform: rotate(0);
 }
 
-.filter.open #filter__icon i {
+.filter.open #filter__icon {
     transform: rotate(180deg);
 }
 
