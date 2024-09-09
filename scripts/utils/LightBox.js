@@ -15,11 +15,12 @@ class LightBox {
                     id="LightBoxMedia" 
                     src="assets/photographers/medias/${this.mediaArray[this.currentIndex].image}" 
                     alt="${mediaTitle}, closeup view"
+                    tabindex="3"
                 /> 
             `;
         } else if (this.mediaArray[this.currentIndex].video) {
             mediaContent = `
-                <video aria-label="${mediaTitle}, closeup view" controls width="250" id="LightBoxMedia">
+                <video aria-label="${mediaTitle}, closeup view" controls width="250" id="LightBoxMedia" tabindex="3">
                     <source src="assets/photographers/medias/${this.mediaArray[this.currentIndex].video}" type="video/mp4">
                 </video>
             `;
@@ -34,13 +35,13 @@ class LightBox {
         lightBoxElement.classList.add("modal-content");
 
         const lightBoxHTML = `
-            <div class="slideShowContainer" id="lightBox">
+            <div class="slideShowContainer" id="lightBox" role="dialog" aria-modal="true">
                 <div class="slideShow">
-                    <button aria-label="Close dialog" id="close_modal" tabindex="3">
+                    <button aria-label="Close dialog" id="close_modal" tabindex="5">
                         <span><i class="fa-solid fa-xmark"></i></span>
                     </button>
                     
-                    <button id="left" aria-label="Previous image" tabindex="2">
+                    <button id="left" aria-label="Previous media" tabindex="2">
                         <span><i class="fa-solid fa-chevron-left"></i></span>
                     </button>
 
@@ -50,13 +51,13 @@ class LightBox {
                                 ${mediaContent}
                             </div>
                             
-                            <div class="ImgInfos">
+                            <div class="ImgInfos" tabindex="4">
                                 <p>${mediaTitle}</p>
                             </div>
                         </div>
                     </div>
 
-                    <button id="right" aria-label="Next image" tabindex="1">
+                    <button id="right" aria-label="Next media" tabindex="1">
                         <span><i class="fa-solid fa-chevron-right"></i></span>
                     </button>
                 </div>
@@ -66,7 +67,6 @@ class LightBox {
         lightBoxElement.innerHTML = lightBoxHTML;
         document.body.appendChild(lightBoxElement);
 
-        // Focus the right arrow button when the Lightbox is created
         const rightButton = document.getElementById("right");
         rightButton.focus(); // Set initial focus to the right arrow
 
@@ -94,8 +94,6 @@ class LightBox {
     lightboxBrowser() {
         const rightButton = document.getElementById("right");
         const leftButton = document.getElementById("left");
-
-        rightButton.focus(); // Focus on the right button initially
 
         rightButton.addEventListener("click", (event) => {
             event.preventDefault();
@@ -134,11 +132,12 @@ class LightBox {
                     id="LightBoxMedia" 
                     src="assets/photographers/medias/${this.mediaArray[this.currentIndex].image}" 
                     alt="${mediaTitle}, closeup view"
+                    tabindex="3"
                 /> 
             `;
         } else if (this.mediaArray[this.currentIndex].video) {
             mediaContent = `
-                <video aria-label="${mediaTitle}, closeup view" controls width="250" id="LightBoxMedia">
+                <video aria-label="${mediaTitle}, closeup view" controls width="250" id="LightBoxMedia" tabindex="3">
                     <source src="assets/photographers/medias/${this.mediaArray[this.currentIndex].video}" type="video/mp4">
                 </video>
             `;
@@ -150,25 +149,29 @@ class LightBox {
 
     trapFocus() {
         const lightbox = document.getElementById("lightBox");
-        const focusableElements = lightbox.querySelectorAll("button");
-        const firstFocusableElement = document.getElementById("right");
-        const secondFocusableElement = document.getElementById("left");
-        const lastFocusableElement = document.getElementById("close_modal");
+        const focusableElements = [
+            document.getElementById("right"), // Tabindex 1
+            document.getElementById("left"),  // Tabindex 2
+            document.getElementById("LightBoxMedia"), // Tabindex 3 (video or image)
+            document.querySelector(".ImgInfos"), // Tabindex 4
+            document.getElementById("close_modal") // Tabindex 5
+        ];
+
+        let firstFocusableElement = focusableElements[0]; // Right button
+        let lastFocusableElement = focusableElements[focusableElements.length - 1]; // Close button
 
         const trapHandler = (event) => {
             const isTabPressed = event.key === "Tab";
-            if (!isTabPressed) {
-                return;
-            }
+            if (!isTabPressed) return;
 
             if (event.shiftKey) {
-                // If Shift + Tab, go backward in the focus order
+                // Shift + Tab: Move backwards
                 if (document.activeElement === firstFocusableElement) {
                     event.preventDefault();
                     lastFocusableElement.focus();
                 }
             } else {
-                // If Tab is pressed, go forward in the focus order
+                // Tab: Move forward
                 if (document.activeElement === lastFocusableElement) {
                     event.preventDefault();
                     firstFocusableElement.focus();
@@ -178,10 +181,15 @@ class LightBox {
 
         document.addEventListener("keydown", trapHandler);
 
-        const closeLightbox = () => {
-            document.removeEventListener("keydown", trapHandler);
-        };
+        // Ensure that the video can be focused by setting its tabindex
+        const lightBoxMedia = document.getElementById("LightBoxMedia");
+        if (lightBoxMedia && lightBoxMedia.tagName === "VIDEO") {
+            lightBoxMedia.setAttribute("tabindex", "3"); // Set tabindex for video
+        }
 
-        document.getElementById("close_modal").addEventListener("click", closeLightbox);
+        // Remove trapHandler when closing the lightbox
+        document.getElementById("close_modal").addEventListener("click", () => {
+            document.removeEventListener("keydown", trapHandler);
+        });
     }
 }

@@ -34,19 +34,14 @@ class ImgGalleryBlock {
     let mediaElement;
 
     if (this._ImgGallery.video) {
-      mediaElement = document.createElement("video"); // Create video element
-      mediaElement.controls = true; // Add video controls
+      // If it's a video, create a thumbnail image for the video
+      mediaElement = document.createElement("img");
+      mediaElement.src = this._ImgGallery.video.replace(".mp4", ".jpg"); // Assuming thumbnail is named similarly
+      mediaElement.alt = this._ImgGallery.title || "Video thumbnail";
 
-      // Set aria-label for accessibility
-      const mediaTitle = this._ImgGallery.title || 'Video'; // Fallback to "Video" if title is undefined
-      mediaElement.setAttribute("aria-label", `${mediaTitle}`);
-
-      const sourceElement = document.createElement("source"); // Create source element for video
-      sourceElement.src = this._ImgGallery.video; // Set video source
-      sourceElement.type = "video/mp4"; // Set video type
-      mediaElement.appendChild(sourceElement); // Add source to video
     } else if (this._ImgGallery.image) {
-      mediaElement = document.createElement("img"); // Create image element
+      // For images, display the image directly
+      mediaElement = document.createElement("img");
       mediaElement.src = this._ImgGallery.image; // Set image source
       mediaElement.alt = this._ImgGallery.title; // Set alt text for image
     } else {

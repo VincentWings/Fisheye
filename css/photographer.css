@@ -519,6 +519,10 @@ input.error {
     object-fit: cover;
 }
 
+#LightBoxMedia {
+    border-radius: 5px;
+}
+
 #mediaContainer .Img {
     width: 100%;
     height: 100%;
