@@ -10,20 +10,18 @@ class LightBox {
         let mediaTitle = this.mediaArray[this.currentIndex].title || "";
 
         if (this.mediaArray[this.currentIndex].image) {
-            mediaContent = `
-                <img 
+            mediaContent = 
+                `<img 
                     id="LightBoxMedia" 
                     src="assets/photographers/medias/${this.mediaArray[this.currentIndex].image}" 
                     alt="${mediaTitle}, closeup view"
                     tabindex="3"
-                /> 
-            `;
+                />`;
         } else if (this.mediaArray[this.currentIndex].video) {
-            mediaContent = `
-                <video aria-label="${mediaTitle}, closeup view" controls width="250" id="LightBoxMedia" tabindex="3">
+            mediaContent = 
+                `<video aria-label="${mediaTitle}, closeup view" controls width="250" id="LightBoxMedia" tabindex="3">
                     <source src="assets/photographers/medias/${this.mediaArray[this.currentIndex].video}" type="video/mp4">
-                </video>
-            `;
+                </video>`;
         }
 
         const existingModalContent = document.querySelector(".modal-content");
@@ -34,8 +32,8 @@ class LightBox {
         const lightBoxElement = document.createElement("div");
         lightBoxElement.classList.add("modal-content");
 
-        const lightBoxHTML = `
-            <div class="slideShowContainer" id="lightBox" role="dialog" aria-modal="true">
+        const lightBoxHTML = 
+            `<div class="slideShowContainer" id="lightBox" role="dialog" aria-modal="true">
                 <div class="slideShow">
                     <button aria-label="Close dialog" id="close_modal" tabindex="5">
                         <span><i class="fa-solid fa-xmark"></i></span>
@@ -61,8 +59,7 @@ class LightBox {
                         <span><i class="fa-solid fa-chevron-right"></i></span>
                     </button>
                 </div>
-            </div>
-        `;
+            </div>`;
 
         lightBoxElement.innerHTML = lightBoxHTML;
         document.body.appendChild(lightBoxElement);
@@ -78,17 +75,32 @@ class LightBox {
     lightBoxCloser() {
         const closeButton = document.getElementById("close_modal");
 
+        // Close modal when clicking the close button
         closeButton.addEventListener("click", (event) => {
             event.preventDefault();
             event.stopPropagation();
-
-            const modal = document.getElementById("modal");
-            if (modal) {
-                modal.classList.remove("show");
-            }
-
-            document.getElementById("lightBox").remove();
+            this.closeLightbox();
         });
+
+        // Close modal when pressing the Escape key
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                this.closeLightbox();
+            }
+        });
+    }
+
+    // Create a reusable function to close the lightbox
+    closeLightbox() {
+        const modal = document.getElementById("modal");
+        if (modal) {
+            modal.classList.remove("show");
+        }
+
+        const lightbox = document.getElementById("lightBox");
+        if (lightbox) {
+            lightbox.remove();
+        }
     }
 
     lightboxBrowser() {
@@ -127,20 +139,18 @@ class LightBox {
         let mediaTitle = this.mediaArray[this.currentIndex].title || "";
 
         if (this.mediaArray[this.currentIndex].image) {
-            mediaContent = `
-                <img 
+            mediaContent = 
+                `<img 
                     id="LightBoxMedia" 
                     src="assets/photographers/medias/${this.mediaArray[this.currentIndex].image}" 
                     alt="${mediaTitle}, closeup view"
                     tabindex="3"
-                /> 
-            `;
+                />`;
         } else if (this.mediaArray[this.currentIndex].video) {
-            mediaContent = `
-                <video aria-label="${mediaTitle}, closeup view" controls width="250" id="LightBoxMedia" tabindex="3">
+            mediaContent = 
+                `<video aria-label="${mediaTitle}, closeup view" controls width="250" id="LightBoxMedia" tabindex="3">
                     <source src="assets/photographers/medias/${this.mediaArray[this.currentIndex].video}" type="video/mp4">
-                </video>
-            `;
+                </video>`;
         }
 
         mediaContainer.innerHTML = mediaContent;
